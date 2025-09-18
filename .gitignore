@@ -2,3 +2,7 @@
 venv/
 __pycache__/
 .pytest_cache/
+
+# https://github.com/boris-gans/creational_design_patterns_exercise.git
+# cd your-local-repo
+git remote set-url origin git@github.com:YOUR_USERNAME/REPO_NAME.git
