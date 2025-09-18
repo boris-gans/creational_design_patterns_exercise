@@ -32,7 +32,7 @@ class CampaignBuilder:
       self.start_date: Optional[date] = None
       self.end_date: Optional[date] = None
       self.target_audience: Optional[Dict[str, Any]] = {}
-      self.creatives: Optional[Creatives] = []
+      self.creatives: Optional[List[Dict[str, str]]] = []
       self.tracking: Optional[Dict[str, str]] = {}
 
 
@@ -65,47 +65,35 @@ class CampaignBuilder:
 
     def with_audience(self, **kwargs):
 
-      for x,y in kwargs.items():
-        self.target_audience.append({x:y})
-
-
+      self.target_audience.update(kwargs)
       return self
 
     def add_creative(self, headline: str, image_url: str):
       
-      if headline:
-        self.creatives.headline = headline
-      if image_url:
-        self.creatives.url = image_url
-
+      self.creatives.append({
+          "headline": headline,
+          "image_url": image_url,
+      })
       return self
 
     def with_tracking(self, **kwargs):
 
-      for x,y in kwargs.items():
-        self.tracking.append({x:y})
-
+      self.tracking.update(kwargs)
       return self
 
     def build(self) -> Campaign:
-      # TODO: Validations and return Campaign instance
-
       if None in (self.name, self.channel, self.daily_budget, self.start_date):
-            raise ValueError("Missing required fields")
+        raise ValueError("Missing required fields: name, channel, daily_budget, start_date")
       
       if len(self.creatives) < 1:
-         raise ValueError("Missing required creative")
+        raise ValueError("Missing required creatives")
       
       if self.end_date and self.end_date < self.start_date:
-         raise ValueError("Invalid end date")
+        raise ValueError("End_date is before start date")
       
-# - A campaign must have a name.
-# - A campaign must have a channel.
-# - The daily budget must be provided and must be positive.
-# - The start date is required.
-# - If an end date is provided, the start date must be before or equal to the end date.
-# - At least one creative (headline and image URL) is required.
-      
+      if self.daily_budget < 0:
+        raise ValueError("Budget must be positive")
+
       return Campaign(
         name=self.name,
         channel=self.channel,
