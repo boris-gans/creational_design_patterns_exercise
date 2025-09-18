@@ -4,26 +4,19 @@ from uuid import uuid4
 from .budget import GlobalBudget
 from .campaign import Campaign
 
-# Functional requirements:
-# - Campaigns should allocate their daily budget to the global budget.
-# - When a campaign is created, a external id should be returned. This id should have a prefix with the initial of the channel i.e. For facebook ads --> "f_<some_id>"
-# - Two clients are needed: FacebookAds and GoogleAds
-# - If different channel client is created, and error should arise.
 
 class ChannelClient(ABC):
-    # _id_counter = uuid4()
+  def __init__(self, name: str):
+    self.name = name
+    self.budget = GlobalBudget()
 
-    def __init__(self, name: str):
-      self.name = name
-      self.budget = GlobalBudget()
+  @abstractmethod
+  def create_campaign(self, campaign: Campaign) -> str:
+    pass
 
-    @abstractmethod
-    def create_campaign(self, campaign: Campaign) -> str:
-      pass
-
-    @abstractmethod
-    def pause_campaign(self, campaign_id: str) -> None:
-      pass
+  @abstractmethod
+  def pause_campaign(self, campaign_id: str) -> None:
+    pass
 
 
 class GoogleAdsClient(ChannelClient):
@@ -40,7 +33,7 @@ class GoogleAdsClient(ChannelClient):
 
 class FacebookAdsClient(ChannelClient):
   def __init__(self):
-     super().__init__("facebook")
+    super().__init__("facebook")
 
   def create_campaign(self, campaign):
     self.budget.allocate(campaign.daily_budget)
