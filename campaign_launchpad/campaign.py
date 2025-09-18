@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from datetime import date
 from typing import Optional, Dict, Any, List
@@ -15,17 +14,8 @@ class Campaign:
     creatives: List[Dict[str, str]]
     tracking: Dict[str, str]
 
-@dataclass(frozen=True)
-class Creatives:
-  def __init__(self):
-     self.headline: Optional[str] = None
-     self.url: Optional[str] = None
-  
-
-
 class CampaignBuilder:
     def __init__(self):
-      # self.campaign = Campaign
       self.name: Optional[str] = None
       self.channel: Optional[str] = None
       self.daily_budget: Optional[float] = None
@@ -35,15 +25,10 @@ class CampaignBuilder:
       self.creatives: Optional[List[Dict[str, str]]] = []
       self.tracking: Optional[Dict[str, str]] = {}
 
-
-      # TODO
       pass
 
     def with_name(self, name: str):
-      # TODO
-      # if not name:
-      #   return
-      
+
       self.name = name
       return self
 
